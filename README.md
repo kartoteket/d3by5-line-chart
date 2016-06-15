@@ -46,7 +46,7 @@ The line chart inherits all options from the [d3by5 base chart](https://github.c
   ​
 
 ## EXAMPLE
-See folder `./example`. If missing, re-create with `npm run build`.
+See folder `./example`. (Created with `npm run build`.)
 
 ## LICENCE
 [MIT](https://opensource.org/licenses/MIT)
