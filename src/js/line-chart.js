@@ -141,9 +141,8 @@ function LineChart () {
     _mapData : function (inData, colorAccessor) {
       var idPrefix = this.options.idPrefix
         , that = this
-        , parsedValues = []
+        , values = []
       ;
-
       data = inData.map(function (d, i) {
 
         if (_.isArray(d.values)) {
@@ -156,16 +155,16 @@ function LineChart () {
 
           // Map keys to values in object-form
           _.each(d.values, function(value){
-            parsedValues.push(_.object(_.pluck(d.columns, 'label'), value));
+            values.push(_.object(_.pluck(d.columns, 'label'), value));
           });
 
           // what if not keys..... ?
 
           // typecast data
-          parsedValues = _.each(parsedValues, that._typeCast, d);
+         values = _.each(values, that._typeCast, that);
 
           // set values to parsed values
-          d.values = parsedValues;
+          d.values = values;
         }
 
         d.color = d.color || colorAccessor(i);
