@@ -1,0 +1,52 @@
+//
+// base
+// -----------------
+body {
+  font: 14px sans-serif;
+}
+
+
+
+//
+// Graphs
+// ----------------
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #aaa;
+  shape-rendering: crispEdges;
+}
+
+.line {
+  stroke-width: 1.5px;
+}
+
+
+
+//
+// Grid
+// -----------------
+
+.columns {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+
+.column {
+  flex: 0 0 100%;
+
+  @media (min-width: 600px) {
+    .columns-2 & {
+      flex: 1 1 50%;
+    }
+  }
+}
+
+//
+// Code
+// -------------
+code[class*="language-"],
+pre[class*="language-"] {
+  font-size: .75rem;
+}

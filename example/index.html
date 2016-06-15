@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>d3by5 Line Chart Examples</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/vendor/prism.css">
+</head>
+<body>
+        <h1>d3by5 Line Chart</h1>
+
+        <h2>Examples</h2>
+        <div class="columns columns-2">
+          <div class="column">
+            <h3>Line Chart Example 1</h3>
+            <div id="js-chart-1"></div>
+          </div>
+          <div class="column">
+            <pre><code class="language-js">
+/**
+ * Example 1
+ * Based on https://bl.ocks.org/mbostock/3883245
+ */
+
+  // Load data
+ d3.json("example/data.json", function(error, data) {
+
+  // Describe data
+  var data = [
+    {
+      label: "Syria",
+      columns : [
+        {
+          "label"  : "Date",      // what to call this data column
+          "type"   : "date",      // what type of data is in it
+          "format" : "%d-%b-%y",  // (optional) what format is it in
+        },
+        {
+          "label"  : "Close", "type"   : "number",
+        }
+      ],
+      values : data
+    }
+  ];
+
+  // Initalize chart module with options and bind data
+  var chart = linechart()
+            .width(600)
+            .height(500)
+            .fillColor('blue')
+            .margin(20,20,50,50)
+            .data(data);
+
+ // call chart with dom element hook (d3 select)
+ d3.select('#js-chart-1').call(_.bind(chart.init, chart));
+
+});
+            </code></pre>
+          </div>
+        </div>
+        <div class="columns columns-2">
+          <div class="column">
+            <h3>Line Chart Example 2</h3>
+            <div id="js-chart-2"></div>
+          </div>
+          <div class="column">
+            <pre><code class="language-js">
+/**
+ * Example 2
+ * Data from UDI [https://www.udi.no/statistikk-og-analyse/statistikk/]
+ */
+ d3.json("example/data2.json", function(error, data) {
+
+  var data= [
+    {
+      label: "Enslige mindreårige asylsøkere",
+      columns : [
+        {
+          "label"  : "Måned 2015",
+          "type"   : "date",
+          "format" : "%m-%Y",
+        },
+        {
+          "label"  : "Antall Enslige mindreårige asylsøkere",
+        }
+      ],
+      values : data
+    }
+  ];
+
+  // Initalize chart and bind data (using deafult options)
+  var chart = linechart().data(data);
+
+  d3.select('#js-chart-2').call(_.bind(chart.init, chart));
+
+});
+            </code></pre>
+          </div>
+        </div>
+
+        <div class="columns columns-2">
+          <div class="column">
+            <h2>Available Options</h2>
+            <h3>Base chart options (available to all d3by5 charts)</h3>
+            <ul>
+              <li>margin</li>
+              <li>width</li>
+              <li>height</li>
+              <li>padding</li>
+              <li>fillColor</li>
+              <li>idPrefix</li>
+            </ul>
+            <h3>Specific Line chart options</h3>
+            <ul>
+            <li>axis</li>
+            </ul>
+          </div>
+        </div>
+        <script src="js/main.js"></script>
+        <script src="js/vendor/prism.js"></script>
+</body>
+</html>

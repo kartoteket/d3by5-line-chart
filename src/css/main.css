@@ -1,0 +1,35 @@
+body {
+  font: 14px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #aaa;
+  shape-rendering: crispEdges;
+}
+
+.line {
+  stroke-width: 1.5px;
+}
+
+.columns {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+
+.column {
+  flex: 0 0 100%;
+}
+
+@media (min-width: 600px) {
+  .columns-2 .column {
+    flex: 1 1 50%;
+  }
+}
+
+code[class*="language-"],
+pre[class*="language-"] {
+  font-size: .75rem;
+}

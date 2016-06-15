@@ -1,0 +1,48 @@
+{
+  "name": "d3by5-line-chart",
+  "version": "0.0.1",
+  "description": "A reusable d3 line chart ",
+  "main": "dist/d3by5-line-chart.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "bin/build.sh",
+    "watch": "bin/watch.sh",
+    "preinstall": "npm link ../d3by5-base-chart",
+    "link": "npm link ../d3by5-base-chart",
+    "clean": "rm -rf dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kartoteket/d3by5-line-chart.git"
+  },
+  "keywords": [
+    "d3",
+    "chart",
+    "graph"
+  ],
+  "author": "Kartoteket <office@3by5.no> (http://3by5.no)",
+  "contributors": [
+    "Bård Røtzer <bard@kartoteket.as>",
+    "Svale Fossåskaret <svale@kartoteket.as>"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kartoteket/d3by5-line-chart/issues"
+  },
+  "homepage": "https://github.com/kartoteket/d3by5-line-chart#readme",
+  "dependencies": {
+    "d3": "^3.5.17",
+    "d3by5-base-chart": "latest",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "autoprefixer": "^6.3.6",
+    "browserify": "^13.0.1",
+    "livereload": "^0.4.1",
+    "node-sass": "^3.7.0",
+    "onchange": "^2.4.0",
+    "postcss-cli": "^2.5.2",
+    "uglify-js": "^2.6.2",
+    "watchify": "latest"
+  }
+}
