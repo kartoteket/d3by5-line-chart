@@ -17,7 +17,6 @@ function LineChart () {
     options : {
       idPrefix: 'lineId-',
       axis: {x: 0, y: 1},
-      fillColor : 'red'
     },
 
     init: function (selection) {
@@ -31,6 +30,7 @@ function LineChart () {
 
 
     draw: function () {
+
       var that = this
         , margin = this.options.margin
         , width = this.options.width  - margin.left - margin.right
@@ -39,14 +39,17 @@ function LineChart () {
         , columns = this.options.data[0].columns
         , x
         , y
-        , xColumn = columns[that.options.axis.x] // X axis default to first column. Can be override with chart.axis()
-        , yColumn = columns[that.options.axis.y]
-        , xDimension = xColumn.label
-        , yDimension = yColumn.label
+        , xColumn
+        , yColumn
+        , xDimension
+        , yDimension
         , xAxis
         , yAxis
         , dom
         , svg
+        , series
+        , seriesKeys
+        , lines
         , line
         , lineColor = this.options.data[0].color
         , lineId = this.options.data[0].id
@@ -58,11 +61,42 @@ function LineChart () {
         * Prepare to draw
         */
 
-        // set scale relative to type. X defaults to date. Y default to linear.
-        x = (xColumn.type == 'linear') ? d3.scale.linear() : d3.time.scale();
-        y = (yColumn.type == 'date') ? d3.time.scale() : d3.scale.linear();
 
-        // set axis
+        // X-axis defaults to first data column. Y-axis defaults to second datacolumn.
+        // Can be override with chart.axis() that takes either an [int] as reference to a column
+        // or an object {label, [type, format]}
+        xColumn = isNaN(that.options.axis.x) ? that.options.axis.x : columns[that.options.axis.x];
+        yColumn = isNaN(that.options.axis.y) ? that.options.axis.y : columns[that.options.axis.y];
+        xDimension = xColumn.label;
+        yDimension = yColumn.label;
+
+
+        // get series (lines to draw)
+        seriesKeys =  d3.keys(data[0]).filter(function(key) {
+          return key !== xDimension;
+        });
+
+        series = seriesKeys.map(function(name){
+          return {
+            name: name,
+            values: data.map(function(d) {
+              var value = {};                     // done the heavy way to use variables as keys...
+              value[xDimension] = d[xDimension];
+              value[yDimension] = d[name];
+              return value;
+            })
+          };
+        });
+
+        // tmp colorizer
+        var color = d3.scale.category10();
+        color.domain(seriesKeys);
+
+        // set scale relative to type. X defaults to date. Y default to linear.
+        x = (xColumn.hasOwnProperty('type') && xColumn.type === 'linear') ? d3.scale.linear() : d3.time.scale();
+        y = (yColumn.hasOwnProperty('type') && yColumn.type === 'date') ? d3.time.scale() : d3.scale.linear();
+
+        // set axis. TODO: option to control axis visibility and position
         xAxis = d3.svg.axis()
             .scale(x)
             .orient('bottom');
@@ -74,11 +108,20 @@ function LineChart () {
         // Domain and range
         x.range([0, width]);
         y.range([height, 0]);
+
         x.domain(d3.extent(data, function(d) { return d[xDimension]; }));
-        y.domain(d3.extent(data, function(d) { return d[yDimension]; }));
+//        y.domain(d3.extent(data, function(d) { return d[yDimension]; }));  //TODO min/max fo rmultiple series
+
+        y.domain([
+          d3.min(series, function(s) { return d3.min(s.values, function(v) { return v[yDimension]; }); }),
+          d3.max(series, function(s) { return d3.max(s.values, function(v) { return v[yDimension]; }); })
+        ]);
+
+
 
         // set line
         line = d3.svg.line()
+//            .interpolate("basis") // TODO: add option to interpolate
             .x(function(d) { return x(d[xDimension]); })
             .y(function(d) { return y(d[yDimension]); });
 
@@ -122,15 +165,33 @@ function LineChart () {
             .style('text-anchor', 'end')
             .text(yDimension);
 
-        svg.append('path')
-            .datum(data)
-            .style('stroke', lineColor)
+        lines = svg.selectAll(".serie")
+            .data(series)
+            .enter()
+          .append("g")
+            .attr("class", function(d) {
+              return "serie " + d.name;
+            });
+
+        lines.append("path")
             .attr('id', lineId)
-            .attr('class', 'line')
-            .attr('d', line)
+            .attr("class", "line")
+            .attr("d", function(d) { return line(d.values); })
+            .style("stroke", function(d) { return color(d.name); })
             .style('fill','none');
+
+      //   svg.append('path')
+      //       .datum(data)
+      //       .style('stroke', lineColor)
+      //       .attr('id', lineId)
+      //       .attr('class', 'line')
+      //       .attr('d', line)
+      //       .style('fill','none');
+
       });
     },
+
+
 
     /**
      * [_mapData description]
@@ -147,18 +208,13 @@ function LineChart () {
 
         if (_.isArray(d.values)) {
 
-          // Bail out if keys does not match values
-          if(d.columns && (d.columns.length !== d.values[0].length)) {
-            console.error('Number of Keys ('+d.columns.length+') must match values ('+d.values[0].length+')');
-            return false;
-          }
 
           // Map keys to values in object-form
-          _.each(d.values, function(value){
-            values.push(_.object(_.pluck(d.columns, 'label'), value));
-          });
+            _.each(d.values, function(value){
+              values.push(_.object(_.pluck(d.columns, 'label'), value));
+            });
 
-          // what if not keys..... ?
+          // TODO: what if not keys..... ???!?
 
           // typecast data
          values = _.each(values, that._typeCast, that);
@@ -177,6 +233,7 @@ function LineChart () {
     },
 
 
+
     /**
      * Line chart specific setters/getters
      */
@@ -185,7 +242,6 @@ function LineChart () {
       this.options.axis = value;
       return this;
     }
-
 
   };
 

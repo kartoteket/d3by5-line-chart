@@ -38,10 +38,10 @@ In package.json;
 ## API
 The line chart inherits all options from the [d3by5 base chart](https://github.com/kartoteket/d3by5-base-chart) and extends these with options specific for Line Charts:
 
-* **axis** 
-  Maps data columns to chart axis (x and y).
-
-  *Default value:*  `{x: 0, y: 1}` First column maps to the X-axis. Second column maps to the Y-axis. 
+* **axis**
+  {Object} Describes the X and Y axis of the chart. *Default value:*  `{x: 0, y: 1}`
+  X-axis defaults to first data column. Y-axis defaults to second datacolumn.
+  X and Y can either be a reference to a column `[int]`  or an object `{label, [type, format]}`
 
   ​
 
