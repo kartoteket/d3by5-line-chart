@@ -15,38 +15,36 @@
         <h2>Examples</h2>
         <div class="columns columns-2">
           <div class="column">
-            <h3>Line Chart Example 1</h3>
+            <h3>Line Chart Example 1 - Simple</h3>
             <div id="js-chart-1"></div>
           </div>
           <div class="column">
             <pre><code class="language-js">
 /**
- * Example 1
+ * Example 1 - Simple line graph
  * Based on https://bl.ocks.org/mbostock/3883245
  */
 
   // Load data
- d3.json("example/data.json", function(error, data) {
+ d3.json("data/data.json", function(error, data) {
 
   // Describe data
-  var data = [
+  data = [
     {
       label: "Syria",
       columns : [
         {
-          "label"  : "Date",      // what to call this data column
-          "type"   : "date",      // what type of data is in it
-          "format" : "%d-%b-%y",  // (optional) what format is it in
+          "label"  : "Date",       // what to call this data column
+          "type"   : "date",       // what type of data is in it
+          "format" : "%d-%b-%y",   // (optional) what format is it in
         },
-        {
-          "label"  : "Close", "type"   : "number",
-        }
+        {"label" : "Close", "type" : "number"}
       ],
       values : data
     }
   ];
 
-  // Initalize chart module with options and bind data
+//  Initalize chart module with options and bind data
   var chart = linechart()
             .width(600)
             .height(500)
@@ -56,23 +54,73 @@
 
  // call chart with dom element hook (d3 select)
  d3.select('#js-chart-1').call(_.bind(chart.init, chart));
+ console.table(chart.data());
+});
+            </code></pre>
+          </div>
+        </div>
 
+        <div class="columns columns-2">
+          <div class="column">
+            <h3>Line Chart Example 2 - Multiple Series</h3>
+            <div id="js-chart-2"></div>
+          </div>
+          <div class="column">
+            <pre><code class="language-js">
+/**
+ * Example 2 - Line graph with mulitple data series
+ * Based on https://bl.ocks.org/mbostock/3884955
+ */
+
+ var d3 = require('d3')
+   , _ = require('underscore')
+   , linechart  = require('./line-chart.js');
+
+  // Load data
+ d3.json("data/data3.json", function(error, data) {
+
+  // Describe data
+  data = [
+    {
+      label: "Tempratures in three major cities",
+      columns : [
+        {
+          "label"  : "Date",       // what to call this data column
+          "type"   : "date",       // what type of data is in it
+          "format" : "%Y%m%d",    // (optional) what format is it in
+        },
+        {"label" : "New York"},
+        {"label" : "San Fransisco"},
+        {"label" : "Austin"},
+      ],
+      values : data
+    }
+  ];
+
+ // Initalize chart module with options and bind data
+  var chart = linechart()
+            .margin(20,20,50,50)
+            .axis({x: 0, y: {label: 'Temprature'}}) // Use object to create Y axsis
+            .data(data);                                //  independent from data columns
+
+ // call chart with dom element hook (d3 select)
+ d3.select('#js-chart-2').call(_.bind(chart.init, chart));
 });
             </code></pre>
           </div>
         </div>
         <div class="columns columns-2">
           <div class="column">
-            <h3>Line Chart Example 2</h3>
-            <div id="js-chart-2"></div>
+            <h3>Line Chart Example 3</h3>
+            <div id="js-chart-3"></div>
           </div>
           <div class="column">
             <pre><code class="language-js">
 /**
- * Example 2
+ * Example 3
  * Data from UDI [https://www.udi.no/statistikk-og-analyse/statistikk/]
  */
- d3.json("example/data2.json", function(error, data) {
+ d3.json("data/data2.json", function(error, data) {
 
   var data= [
     {
