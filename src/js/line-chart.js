@@ -1,7 +1,8 @@
 'use:strict';
 var _ = require('underscore')
  , d3 = require('d3')
- , base = require('d3by5-base-chart')
+ , d3by5 = require('d3by5')
+ , utils = require('./line-chart-utils')
 ;
 
 module.exports = LineChart;
@@ -245,8 +246,9 @@ function LineChart () {
 
   };
 
-  chart.options = _.extend(base.options, chart.options);
-  chart = _.extend(base, chart);
+  // extend chart from base
+  // chart.options = _.extend(d3by5.base.options, chart.options); //Does not work. base options are preserved between instances
+  chart = _.extend(d3by5.base, chart, utils);
 
   return (chart.init());
 }
