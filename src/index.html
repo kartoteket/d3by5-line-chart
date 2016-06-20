@@ -34,27 +34,36 @@
       label: "Syria",
       columns : [
         {
-          "label"  : "Date",       // what to call this data column
+         "label"  : "Date",        // what to call this data column
           "type"   : "date",       // what type of data is in it
           "format" : "%d-%b-%y",   // (optional) what format is it in
         },
-        {"label" : "Close", "type" : "number"}
+        {
+          "label"  : "Close",
+          "type"   : "number",
+        }
       ],
       values : data
     }
   ];
 
-//  Initalize chart module with options and bind data
+  //  Initalize chart module with options and bind data
+  var axis = {
+              y: {label:'topp', },
+              x : {label: 'supert', ticks: [1] }};
+
   var chart = linechart()
-            .width(600)
+            // .width(300)
             .height(500)
             .fillColor('blue')
-            .margin(20,20,50,50)
+            .margin(20,50,50,50)
+            .axis(axis)
             .data(data);
+
 
  // call chart with dom element hook (d3 select)
  d3.select('#js-chart-1').call(_.bind(chart.init, chart));
- console.table(chart.data());
+ console.log(chart.axis());
 });
             </code></pre>
           </div>
@@ -86,8 +95,8 @@
       columns : [
         {
           "label"  : "Date",       // what to call this data column
-          "type"   : "date",       // what type of data is in it
-          "format" : "%Y%m%d",    // (optional) what format is it in
+           "type"   : "date",      // what type of data is in it
+          "format" : "%Y%m%d",     // (optional) what format is it in
         },
         {"label" : "New York"},
         {"label" : "San Fransisco"},
@@ -97,11 +106,16 @@
     }
   ];
 
+
  // Initalize chart module with options and bind data
   var chart = linechart()
-            .margin(20,20,50,50)
-            .axis({x: 0, y: {label: 'Temprature'}}) // Use object to create Y axsis
-            .data(data);                                //  independent from data columns
+            .setOptions(
+            {
+              yLabel : 'Temprature',
+              xLabel : false,
+              width : 860
+            })
+            .data(data);
 
  // call chart with dom element hook (d3 select)
  d3.select('#js-chart-2').call(_.bind(chart.init, chart));
@@ -139,34 +153,20 @@
     }
   ];
 
-  // Initalize chart and bind data (using deafult options)
-  var chart = linechart().data(data);
+  // Initalize chart and bind data (using almost only deafult options)
+  var chart = linechart()
+              .xLabel('2015')
+              .data(data);
 
-  d3.select('#js-chart-2').call(_.bind(chart.init, chart));
+
+  d3.select('#js-chart-3').call(_.bind(chart.init, chart));
 
 });
             </code></pre>
           </div>
         </div>
 
-        <div class="columns columns-2">
-          <div class="column">
-            <h2>Available Options</h2>
-            <h3>Base chart options (available to all d3by5 charts)</h3>
-            <ul>
-              <li>margin</li>
-              <li>width</li>
-              <li>height</li>
-              <li>padding</li>
-              <li>fillColor</li>
-              <li>idPrefix</li>
-            </ul>
-            <h3>Specific Line chart options</h3>
-            <ul>
-            <li>axis</li>
-            </ul>
-          </div>
-        </div>
+
         <script src="js/main.js"></script>
         <script src="js/vendor/prism.js"></script>
 </body>

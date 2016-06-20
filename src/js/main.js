@@ -27,7 +27,7 @@
       label: "Syria",
       columns : [
         {
-          "label"  : "Date",       // what to call this data column
+         "label"  : "Date",        // what to call this data column
           "type"   : "date",       // what type of data is in it
           "format" : "%d-%b-%y",   // (optional) what format is it in
         },
@@ -40,18 +40,35 @@
     }
   ];
 
-//  Initalize chart module with options and bind data
+  //  Initalize chart module with options and bind data
+  var axis = {
+              y: {
+                label:'topp',
+              },
+              x : {
+                label: 'supert',
+                ticks: [1]
+              }};
+
   var chart = linechart()
-            .width(600)
+            // .width(300)
             .height(500)
             .fillColor('blue')
-            .margin(20,20,50,50)
+            .margin(20,50,50,50)
+            .axis(axis)
             .data(data);
+
 
  // call chart with dom element hook (d3 select)
  d3.select('#js-chart-1').call(_.bind(chart.init, chart));
- console.table(chart.data());
+ console.log(chart.axis());
 });
+
+
+
+
+
+
 
 
 /**
@@ -74,8 +91,8 @@
       columns : [
         {
           "label"  : "Date",       // what to call this data column
-          "type"   : "date",       // what type of data is in it
-          "format" : "%Y%m%d",    // (optional) what format is it in
+           "type"   : "date",      // what type of data is in it
+          "format" : "%Y%m%d",     // (optional) what format is it in
         },
         {"label" : "New York"},
         {"label" : "San Fransisco"},
@@ -86,15 +103,23 @@
   ];
 
 
- // Initalize chart module with options and bind data
+ // Initalize chart module with setOptions() and bind data
   var chart = linechart()
-            .margin(20,20,50,50)
-            .axis({x: 0, y: {label: 'Temprature'}}) // Int to reference data.column, object for ad hoc. TODO: Add y2 for right y-axis ???!
+            .setOptions(
+            {
+              yLabel : 'Temprature',
+              xLabel : false,
+              width : 860
+            })
             .data(data);
 
  // call chart with dom element hook (d3 select)
  d3.select('#js-chart-2').call(_.bind(chart.init, chart));
+
 });
+
+
+
 
 
 /**
@@ -108,7 +133,7 @@
     return;
   }
 
-  data= [
+  data = [
     {
       label: "Enslige mindreårige asylsøkere",
       columns : [
@@ -126,7 +151,10 @@
   ];
 
   // Initalize chart and bind data (using default options)
-  var chart = linechart().data(data);
+  var chart = linechart()
+              .margin(50)
+              .xLabel('2015')
+              .data(data);
 
   d3.select('#js-chart-3').call(_.bind(chart.init, chart));
 });

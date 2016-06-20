@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "bin/build.sh",
     "watch": "bin/watch.sh",
-    "preinstall": "npm link ../d3by5-base-chart",
-    "link": "npm link ../d3by5-base-chart",
+    "preinstall": "npm link ../d3by5",
+    "link": "npm link ../d3by5",
     "clean": "rm -rf dist"
   },
   "repository": {
@@ -32,7 +32,7 @@
   "homepage": "https://github.com/kartoteket/d3by5-line-chart#readme",
   "dependencies": {
     "d3": "^3.5.17",
-    "d3by5-base-chart": "latest",
+    "d3by5": "latest",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
