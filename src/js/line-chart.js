@@ -20,6 +20,7 @@ function LineChart () {
       width: 640,
       height: 400,
       fillColor: '',
+      lineWidth: 2,
       idPrefix: 'lineId-',
 
       xAxis: true,
@@ -200,8 +201,12 @@ function LineChart () {
         lines.append("path")
             .attr('id', lineId)
             .attr("class", "line")
-            .attr("d", function(d) { return line(d.values); })
-            .style("stroke", function(d) { return color(d.label); })
+            .attr("d", function(d) {
+              return line(d.values);
+            })
+            // .style("stroke", function(d) { return color(d.label); })
+            .style("stroke", function(d) { return lineColor; }) // color should be a funtion of dataseries. Test this.
+            .style("stroke-width", opt.lineWidth)
             .style('fill','none');
 
       });
@@ -212,6 +217,9 @@ function LineChart () {
      * Line chart specific setters/getters
      */
 
+    lineWidth: function(value) {
+      return arguments.length ? (this.options.lineWidth = value, this) : this.options.lineWidth;
+    },
     xAxis: function(value) {
       return arguments.length ? (this.options.xAxis = value, this) : this.options.xAxis;
     },
