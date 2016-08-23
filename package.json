@@ -2,7 +2,7 @@
   "name": "d3by5-line-chart",
   "version": "0.0.1",
   "description": "A reusable d3 line chart ",
-  "main": "dist/d3by5-line-chart.js",
+  "main": "src/js/line-chart.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "bin/build.sh",
