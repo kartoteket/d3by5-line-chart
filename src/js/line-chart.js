@@ -24,6 +24,8 @@ function LineChart () {
       lineWidth: 2,
       idPrefix: 'lineId-',
 
+      lineDataPoints: false,
+      lineDataValues: false,
       xAxis: true,
       xColumn: 0,
       xLabel: '',
@@ -205,6 +207,51 @@ function LineChart () {
             .style("stroke-width", opt.lineWidth)
             .style('fill','none');
 
+
+
+        // data points on line
+        if(opt.lineDataPoints) {
+          var point = lines.append("g")
+            .attr("class", "line-point")
+            .style("fill", function(d) { return color(d.label); });
+
+          point.selectAll('circle')
+            .data(function(d){return d.values; })
+            .enter()
+            .append('circle')
+            .attr("cx", function(d) {
+              return x.scale(d[x.dimension]);
+            })
+            .attr("cy", function(d) {
+              return y.scale(d[y.dimension]);
+            })
+            .attr("r", 5);
+        }
+
+        if(opt.lineDataValues) {
+          var val = lines.append('g')
+            .attr('class','line-point-value');
+
+          val.selectAll('text')
+            .data(function(d,i){ return d.values;})
+            .enter()
+            .append('text')
+            .attr("x", function(d, i) {
+                return x.scale(d[x.dimension]);
+            })
+            .attr("y", function(d, i) {
+              return y.scale(d[y.dimension]);
+            })
+            .attr('dy', -10)
+            .attr("text-anchor", "middle")
+            .style('fill', '#fff')            //todo -> option
+            .style('font-size', '10px')       //todo -> option
+            .text(function(d) {
+              return d[y.dimension];
+            });
+        }
+
+          });
     },
 
 
@@ -218,6 +265,12 @@ function LineChart () {
 
     lineWidth: function(value) {
       return arguments.length ? (this.options.lineWidth = value, this) : this.options.lineWidth;
+    },
+    lineDataPoints: function(value) {
+      return arguments.length ? (this.options.lineDataPoints = value, this) : this.options.lineDataPoints;
+    },
+    lineDataValues: function(value) {
+      return arguments.length ? (this.options.lineDataValues = value, this) : this.options.lineDataValues;
     },
     xAxis: function(value) {
       return arguments.length ? (this.options.xAxis = value, this) : this.options.xAxis;
