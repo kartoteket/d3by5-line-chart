@@ -16,6 +16,7 @@ function LineChart () {
   var chart = {
 
     options : {
+      data : {},
       margin: {top: 50, right: 50, bottom: 50, left: 50 },
       width: 640,
       height: 400,
@@ -57,8 +58,7 @@ function LineChart () {
         , margin = opt.margin
         , width = opt.width  - margin.left - margin.right
         , height = opt.height - margin.top - margin.bottom
-        , data = opt.data[0].values                                           // TODO: what if mulitple datasets...?
-        , columns = opt.data[0].columns
+        , data = this.parseData()
         , x = {}
         , y = {}
         , series
@@ -73,13 +73,14 @@ function LineChart () {
 
       this.selection.each(function() {
 
+
         /**
         * Prepare to draw
         */
 
         // set X and Y dimensions. X must refer to a data column. Y can be anything, including an empty string or undefined
-        x.dimension = columns[opt.xColumn].label || console.error('The data column used for the X axis must have a label!');
-        y.dimension = opt.yLabel || columns[opt.yColumn].label || '';
+        x.dimension = data.schema[opt.xColumn].label || console.error('The data column used for the X axis must have a label!');
+        y.dimension = opt.yLabel || data.schema[opt.yColumn].label || '';
 
 
         // set X and Y labels
@@ -88,21 +89,21 @@ function LineChart () {
 
 
         // set scale relative to type. X defaults to date. Y default to linear. //TODO: normalise number to linear. Make linear/date constants
-        x.scale = (opt.xScale === 'linear' || columns[opt.xColumn].type === 'linear') ? d3.scale.linear() : d3.time.scale();
-        y.scale = (opt.yScale === 'date' || columns[opt.yColumn].type === 'date') ? d3.time.scale() : d3.scale.linear();
+        x.scale = (opt.xScale === 'linear' || data.schema[opt.xColumn].type === 'linear') ? d3.scale.linear() : d3.time.scale();
+        y.scale = (opt.yScale === 'date' || data.schema[opt.yColumn].type === 'date') ? d3.time.scale() : d3.scale.linear();
 
 
         // set axes
         x.axis = d3by5.axis().show(opt.xAxis).pos(opt.xPos).scale(x.scale).align(opt.xAlign).ticks(opt.xTicks);
         y.axis = d3by5.axis().show(opt.yAxis).pos(opt.yPos).scale(y.scale).align(opt.yAlign).ticks(opt.yTicks);
 
-
         // set series (lines to draw = all data columns except x-dimension). TODO: Too compact, not readable; re-factor...
-        series = _.map(_.filter(_.pluck(columns, 'label'), function(key) {return key !== x.dimension;}), function(label){
+        series = _.map(_.filter(_.pluck(data.schema, 'label'), function(key) {return key !== x.dimension;}), function(label, i){
           return {
+            id: data.schema[i].id, // TODO: verifiser om dette funker
             label: label,
-            values: data.map(function(d) {
-              var value = {};                     // done the heavy way to use variables as keys...
+            values: data.values.map(function(d) {
+              var value = {};                     // done the heavy way si we can use variables as keys...
               value[x.dimension] = d[x.dimension];
               value[y.dimension] = d[label];
               return value;
@@ -110,18 +111,17 @@ function LineChart () {
           };
         });
 
+        // set input domain
+        x.scale.domain(d3.extent(data.values, function(d) { return d[x.dimension]; }));
+        y.scale.domain([
+          d3.min(series, function(s) {return d3.min(s.values, function(v) {return v[y.dimension]; }); }),   // must use min/max (instead of extent) to support multiple series
+          d3.max(series, function(s) {return d3.max(s.values, function(v) { return v[y.dimension]; }); })
+        ]);
 
-        // set range
+
+        // set output range
         x.scale.range([0, width]);
         y.scale.range([height, 0]);
-
-
-        // set domain
-        x.scale.domain(d3.extent(data, function(d) { return d[x.dimension]; }));
-        y.scale.domain([
-          d3.min(series, function(s) { return d3.min(s.values, function(v) { return v[y.dimension]; }); }),    // must use min/max to support multiple series
-          d3.max(series, function(s) { return d3.max(s.values, function(v) { return v[y.dimension]; }); })
-        ]);
 
 
         // set line
@@ -134,7 +134,6 @@ function LineChart () {
         // tmp colorizer
         var color = d3.scale.category10();
         color.domain(_.pluck(series, 'label'));
-
 
 
         /**
@@ -194,28 +193,28 @@ function LineChart () {
             .data(series)
             .enter()
           .append("g")
-            .attr("class", function(d) {
-              return "serie " + d.label;
-            });
+            .attr("class", function(d) {return "serie " + d.label; });
 
         lines.append("path")
-            .attr('id', lineId)
-            .attr("class", "line")
-            .attr("d", function(d) {
-              return line(d.values);
+            .attr('id', function(d) {
+              return d.id;
             })
-            // .style("stroke", function(d) { return color(d.label); })
-            .style("stroke", function(d) { return lineColor; }) // color should be a funtion of dataseries. Test this.
+            .attr("class", "line")
+            .attr("d", function(d) {return line(d.values); })
+            .style("stroke", function(d) { return color(d.label); })
             .style("stroke-width", opt.lineWidth)
             .style('fill','none');
 
-      });
     },
 
 
     /**
      * Line chart specific setters/getters
      */
+
+    data: function(value) {
+      return arguments.length ? (this.options.data = value, this) : this.options.data;
+    },
 
     lineWidth: function(value) {
       return arguments.length ? (this.options.lineWidth = value, this) : this.options.lineWidth;

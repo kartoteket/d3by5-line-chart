@@ -7,6 +7,88 @@ var _ = require('underscore')
 module.exports = utils;
 
 /**
+ * En egen parsa data metode for nå. Lager oss et seminar og bygger sammen mot base-metodene en gang i fremtiden
+ *  * @return {[type]} data object
+ */
+utils.parseData = function() {
+
+  // populate the data object
+  var data = this.options.data
+    , title = data.title || ''
+    , schema = data.schema || ''
+    , values = data.values || ''
+    , source = data.source || ''
+    , column
+    , idPrefix = this.options.idPrefix
+    , that = this
+    ;
+
+  // create data schema
+  _.each(_.keys(values[0]), function(label, i) {
+
+    //get
+    column        = schema[i] || {};
+
+    column.id     = column.id || _.uniqueId(idPrefix);
+    column.label  = label;
+    column.color  = column.color || '#000';    // todo need a more complex function here
+
+    // set
+    schema[i]     = column;
+
+
+  });
+
+  // typecast data
+  values = _.each(values, this._typeCast, this);
+
+
+  // set data
+  data = {
+    title : title,
+    schema : schema,
+    values : values,
+    source : source,
+  };
+  return data;
+};
+
+
+/**
+ * A simple first iteration type caster.
+ * @param  {object}   d   data object ({key: value})
+ * @return {object}   d   data object ({key: value})
+ */
+utils._typeCast = function(d) {
+  var format
+    , schema = this.options.data.schema;
+
+    // loop trough schema column by column
+  _.each(schema, function(column){
+
+    switch (column.type) {
+      case 'date':
+        format = d3.time.format(column.format);
+        d[column.label] = format.parse(d[column.label]);
+        break;
+
+      case 'string':
+        d[column.label] = String(d[column.label]);
+        break;
+
+      case 'number':
+      default:
+        d[column.label] = +d[column.label];
+        break;
+    }
+
+  });
+
+  return d;
+};
+
+
+/**
  * [getAxisOptions description]
  * @return {[type]} [description]
  */
