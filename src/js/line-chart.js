@@ -21,11 +21,13 @@ function LineChart () {
       width: 640,
       height: 400,
       fillColor: '',
-      lineWidth: 2,
       idPrefix: 'lineId-',
 
+      lineWidth: 2,
       lineDataPoints: false,
       lineDataValues: false,
+      lineInterpolate: false,
+
       xAxis: true,
       xColumn: 0,
       xLabel: '',
@@ -54,7 +56,6 @@ function LineChart () {
 
 
     draw: function () {
-
       var that = this
         , opt = this.options                                                  // just to shorten...
         , margin = opt.margin
@@ -68,8 +69,6 @@ function LineChart () {
         , svg
         , lines
         , line
-        , lineColor = opt.data[0].color
-        , lineId = opt.data[0].id
       ;
 
 
@@ -128,9 +127,14 @@ function LineChart () {
 
         // set line
         line = d3.svg.line()
-          // .interpolate("basis")    // TODO: add option to interpolate
-          .x(function(d) { return x.scale(d[x.dimension]); })
-          .y(function(d) { return y.scale(d[y.dimension]); });
+
+          .interpolate(opt.lineInterpolate)    // TODO: add option to interpolate
+          .x(function(d) {
+              return x.scale(d[x.dimension]);
+          })
+          .y(function(d) {
+            return y.scale(d[y.dimension]);
+          });
 
 
         // tmp colorizer
@@ -272,6 +276,10 @@ function LineChart () {
     lineDataValues: function(value) {
       return arguments.length ? (this.options.lineDataValues = value, this) : this.options.lineDataValues;
     },
+    lineInterpolate: function(value) {
+      return arguments.length ? (this.options.lineInterpolate = value, this) : this.options.lineInterpolate;
+    },
+
     xAxis: function(value) {
       return arguments.length ? (this.options.xAxis = value, this) : this.options.xAxis;
     },
