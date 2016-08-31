@@ -44,13 +44,19 @@ In package.json;
 | --------------- | -------------------- | -------------- | ---------------------------------------- |
 |                 |                      |                |                                          |
 | **data**        |                      |                |                                          |
-| .data()         | object               |                |                                          |
+| .data()         | object               | {title:[string], schema:[object], values:[object], source:[string]} | A data.value is a object formated as per [d3.csv.parse()] (https://github.com/d3/d3-3.x-api-reference/blob/master/CSV.md#parse)|
 |                 |                      |                |                                          |
 | **layout**      |                      |                |                                          |
 | .width()        | int                  | 640            | Sets the graph total width, including internal margins. |
 | .height()       | int                  | 480            | Sets the graph total height, including internal margins. |
 | .fillColor()    | string or array      | blue           |                                          |
 | .margin()       | int [,int, int, int] | 20, 20, 50, 50 | Margins around graph. To accomandate tick labels etc. |
+|                 |                      |                |                                          |
+| **line(s)**     |                      |                |                                          |
+| .lineWidth()    | int                  | 2              | Width of line(s) in px                   |
+| .lineDataPoints()| bool                | false          | Toggles data points on/off. True or false.|
+| .lineDataValues()| bool                | false          | Toggles data points values on/off. True or false.|
+| .lineInterpolate()| string or bool     | false          | Set line interpolation. [Possible modes](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_interpolate) . |
 |                 |                      |                |                                          |
 | **axis**        |                      |                |                                          |
 | .xAxis()        | bool                 | true           | Toggles X axis on/off. True or false.    |
