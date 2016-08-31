@@ -14,8 +14,8 @@ echo 'Version is -'$PACKAGE_VERSION'-'
 buildDist()
 {
     mkdir -p dist && (
-      browserify src/js/line-chart.js > dist/d3by5.linechart.js &&
-      uglifyjs dist/d3by5.linechart.js -m -c > dist/d3by5.linechart.min.js
+      browserify src/js/line-chart.js > dist/d3by5.line-chart.js &&
+      uglifyjs dist/d3by5.line-chart.js -m -c > dist/d3by5.line-chart.min.js
     )
 }
 
@@ -37,7 +37,7 @@ buildExample()
     cp src/index.html example/ &
     mkdir -p example/js/vendor  && cp -a src/js/vendor/. example/js/vendor/ &
     mkdir -p example/css/vendor && cp -a src/css/vendor/. example/css/vendor/ &
-    & mkdir -p example/data && cp -a src/data/. example/data/
+    mkdir -p example/data && cp -a src/data/. example/data/
   )
 }
 
