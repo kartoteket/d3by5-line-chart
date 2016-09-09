@@ -1,11 +1,19 @@
-'use:strict';
-var _ = require('underscore')
- , d3 = require('d3')
- , d3by5 = require('d3by5')
- , utils = require('./line-chart-utils')
-;
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['underscore', 'd3', 'd3by5', './line-chart-utils'] , factory);
+    } else if (typeof module === 'object' && module.exports) {
+        // Node. Does not work with strict CommonJS, but
+        // only CommonJS-like environments that support module.exports,
+        // like Node.
+        module.exports = factory(require('underscore'), require('d3'), require('d3by5'), require('./line-chart-utils'));
+    } else {
+        // Browser globals (root is window)
+        root.returnExports = factory(root._, root.d3, root.d3by5, root.lineChartUtils);
+    }
+}(this, function (_, d3, d3by5, lineChartUtils) {
 
-module.exports = LineChart;
+'use:strict';
 
 /**
  * The entrypoint
@@ -340,7 +348,10 @@ function LineChart () {
 
   // extend chart from base
   // chart.options = _.extend(d3by5.base.options, chart.options); //Does not work. base options are preserved between instances
-  chart = _.extend(d3by5.base, chart, utils);
+  chart = _.extend(d3by5.base, chart, lineChartUtils);
 
   return (chart.init());
 }
+
+  return LineChart;
+}));

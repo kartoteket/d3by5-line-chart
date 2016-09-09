@@ -1,16 +1,16 @@
 'use:strict';
 var _ = require('underscore')
   , d3 = require('d3')
-  , utils = {}
+  , lineChartUtils = {}
 ;
 
-module.exports = utils;
+module.exports = lineChartUtils;
 
 /**
  * En egen parsa data metode for nå. Lager oss et seminar og bygger sammen mot base-metodene en gang i fremtiden
  *  * @return {[type]} data object
  */
-utils.parseData = function() {
+lineChartUtils.parseData = function() {
 
   // populate the data object
   var data = this.options.data
@@ -59,7 +59,7 @@ utils.parseData = function() {
  * @param  {object}   d   data object ({key: value})
  * @return {object}   d   data object ({key: value})
  */
-utils._typeCast = function(d) {
+lineChartUtils._typeCast = function(d) {
   var format
     , schema = this.options.data.schema;
 
@@ -92,7 +92,7 @@ utils._typeCast = function(d) {
  * [getAxisOptions description]
  * @return {[type]} [description]
  */
-utils.getAxisOptions = function() {
+lineChartUtils.getAxisOptions = function() {
   return  {
     x : {
       axis   : this.options.xAxis,
@@ -120,7 +120,7 @@ utils.getAxisOptions = function() {
  * [setAxisOptions description]
  * @param {[type]} axis [description]
  */
-utils.setAxisOptions = function(axis) {
+lineChartUtils.setAxisOptions = function(axis) {
   var that = this;
   if(_.isObject(axis) && ( _.has(axis, 'x') || _.has(axis, 'y')) ) {
     _.each(axis, function(obj, a) {
@@ -145,7 +145,7 @@ utils.setAxisOptions = function(axis) {
  * @param  {[type]} colorAccessor [description]
  * @return {[type]}               [description]
  */
-utils._mapData = function (inData, colorAccessor) {
+lineChartUtils._mapData = function (inData, colorAccessor) {
   var idPrefix = this.options.idPrefix
     , that = this
     , values = []
